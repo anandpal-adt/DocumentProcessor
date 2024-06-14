@@ -1,0 +1,54 @@
+template_meta:
+  name: lora_bf16
+  description: |
+    Fine-tunes by loading the model weights in half precision,
+    but without quantization. This is slower to train and requires
+    a larger and more expensive GPU, but typically provides better
+    fine-tuned model performance compared to quantized training.
+
+model_type: llm
+base_model: {base_model}
+
+adapter:
+  type: lora
+
+prompt:
+  template: |
+    {prompt_template}
+
+input_features:
+  - name: prompt
+    type: text
+    preprocessing:
+      max_sequence_length: null
+
+output_features:
+  - name: {target}
+    type: text
+    preprocessing:
+      max_sequence_length: null
+
+preprocessing:
+  split:
+    type: random
+    probabilities: [0.95, 0, 0.05]
+  global_max_sequence_length: 2048
+
+# TODO(Arnav): Remove this once we have a better way to handle batch size
+# issues in Ludwig during evaluation.
+generation:
+  max_new_tokens: 64
+
+trainer:
+  type: finetune
+  epochs: 3
+  batch_size: 1
+  steps_per_checkpoint: 1000
+  eval_steps: 100
+  eval_batch_size: 2
+  learning_rate: 0.0002
+  learning_rate_scheduler:
+    decay: cosine
+    warmup_fraction: 0.03
+  gradient_accumulation_steps: 16
+  enable_gradient_checkpointing: true

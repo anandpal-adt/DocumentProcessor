@@ -1,0 +1,86 @@
+import spacy
+from spacy.tokens import DocBin, Span
+import json
+from spacy.cli.train import train
+import os
+from tqdm import tqdm
+# Load the JSON file
+with open('A:/parsing/CustomeResumeParser/venv/trainingData/traindata.json', 'r', encoding='utf-8') as f:
+    data_list = json.load(f)
+folder_path='A:/parsing/CustomeResumeParser/venv/trainingData'
+# Load a new Spacy model
+# nlp = spacy.blank("en") 
+nlp=spacy.load("A:/parsing/CustomeResumeParser/trained_model/model-best")
+db = DocBin()
+
+# Function to convert annotations from the second JSON format
+def convert_annotations(annotations):
+    ents = []
+    for annot in annotations:
+        label = annot.get('label', [])
+        if label:
+            label = label[0]
+        else:
+            print("Skipping annotation without label")
+            continue
+        for point in annot['points']:
+            start = point['start']
+            end = point['end']
+            text = point['text']
+            if text.strip() != text:
+                print(f"Invalid whitespace entity span: {text}")
+                # Fix the entity span by removing leading/trailing whitespace
+                text = text.strip()
+                start = len(text) if text.startswith(point['text']) else 0
+                end = start + len(text)           
+            ents.append((start, end, label))
+    return ents
+
+# Iterate over each data point in the list
+for data in data_list:
+    text = data['content']
+    annotations = data['annotation']
+    ents = convert_annotations(annotations)
+
+    doc = nlp.make_doc(text)
+    entities = []
+    for start, end, label in ents:
+        span = doc.char_span(start, end, label=label, alignment_mode="contract")
+        if span is None:
+            print("Skipping entity")
+        else:
+            entities.append(span)
+
+    # Filter spans to give priority to longer spans
+    filtered_entities = spacy.util.filter_spans(entities)
+    doc.ents = filtered_entities
+    db.add(doc)
+
+
+# for filename in os.listdir(folder_path):
+#     f = open(folder_path + '/' + filename)
+#     TRAIN_DATA = json.load(f)
+
+#     for text, annot in tqdm(TRAIN_DATA['annotations']): # text ist eben text, annot sind die gelabelten annotations
+#         # print(text) # text
+#         # print(annot) # die annotierten entities
+#         doc = nlp.make_doc(text)
+#         ents = []
+#         for start, end, label in annot["entities"]: # ents sind einfach nur die beiden wörter die er sich aus start und end zusammenbaut
+#             span = doc.char_span(start, end, label=label, alignment_mode="contract")
+#             if span is None:
+#                 print("Skipping entity")
+#             else:
+#                 ents.append(span)
+#         doc.ents = ents
+#         db.add(doc)
+
+
+
+# Save the training data to disk
+db.to_disk("./training_data.spacy")
+
+
+
+# Save the trained model 
+train("./config.cfg",output_path="./trained_model", overrides={"paths.train": "./training_data.spacy", "paths.dev": "./training_data.spacy"})
