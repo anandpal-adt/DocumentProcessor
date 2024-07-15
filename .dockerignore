@@ -1,0 +1,16 @@
+# Exclude git directory
+.git
+# Exclude Dockerfile and docker-compose files
+Dockerfile
+docker-compose.yml
+# Exclude Python cache files
+__pycache__
+*.pyc
+*.pyo
+# Exclude development and test directories
+tests
+docs
+# Exclude local environment files
+.env
+.vscode
+.idea
