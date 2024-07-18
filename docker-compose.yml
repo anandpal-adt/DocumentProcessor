@@ -1,0 +1,58 @@
+# services:
+#   web:
+#     build: .
+#     ports:
+#       - "8000:8000"
+#     depends_on:
+#       - mongo
+#     volumes:
+#       - .:/app
+#     environment:
+#       - CONFIG_PATH=/app/con.fig.yml
+#       - PINECONE_API_KEY=a8e5cfd2-ac36-45f1-85c8-46884ea7e342
+#     command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+
+
+#   mongo:
+#     image: mongo
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo-data:/data/db
+
+# volumes:
+#   mongo-data:
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    environment:
+      - CONFIG_PATH=/app/con.fig.yml
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+volumes:
+  mongo-data:
