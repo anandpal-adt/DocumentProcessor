@@ -1,3 +1,31 @@
+<<<<<<< HEAD
+=======
+# services:
+#   web:
+#     build: .
+#     ports:
+#       - "8000:8000"
+#     depends_on:
+#       - mongo
+#     volumes:
+#       - .:/app
+#     environment:
+#       - CONFIG_PATH=/app/con.fig.yml
+#       - PINECONE_API_KEY=a8e5cfd2-ac36-45f1-85c8-46884ea7e342
+#     command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+
+
+#   mongo:
+#     image: mongo
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo-data:/data/db
+
+# volumes:
+#   mongo-data:
+version: '3.8'
+>>>>>>> 753e3009d8b3f3c208f37f53db225420a13394c7
 
 services:
   web:
@@ -9,7 +37,12 @@ services:
     volumes:
       - .:/app
     environment:
+<<<<<<< HEAD
       - CONFIG_PATH=/app/config.yml
+=======
+      - CONFIG_PATH=/app/con.fig.yml
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+>>>>>>> 753e3009d8b3f3c208f37f53db225420a13394c7
     deploy:
       resources:
         limits:

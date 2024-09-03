@@ -1,6 +1,10 @@
 import re
 import docx
+<<<<<<< HEAD
 import yaml     
+=======
+import yaml
+>>>>>>> 753e3009d8b3f3c208f37f53db225420a13394c7
 from pdfminer.high_level import extract_text
 from langchain_community.llms import Predibase
 
@@ -20,19 +24,19 @@ def extract_text_from_docx(file_path):
 
 def parse_response(response):
     # Extract name using regex
-    name_match = re.search(r'\*\*Name:\*\*\s*(.*)', response)
+    name_match = re.search(r'(?:\*\*Name:\*\*|Name:)\s*(.*)', response)
     name = name_match.group(1).strip() if name_match else "Unknown"
 
     # Extract email using regex
-    email_match = re.search(r'\*\*Email:\*\*\s*(.*)', response)
+    email_match = re.search(r'(?:\*\*Email:\*\*|Email:)\s*(.*)', response)
     email = email_match.group(1).strip() if email_match else "Unknown"
 
     # Extract phone using regex
-    phone_match = re.search(r'\*\*Phone:\*\*\s*(.*)', response)
+    phone_match = re.search(r'(?:\*\*Phone:\*\*|Phone:)\s*(.*)', response)
     phone = phone_match.group(1).strip() if phone_match else "Unknown"
 
     # Extract skills using regex and join them with commas
-    skills_match = re.search(r'\*\*Skills:\*\*\n*(.*)', response, re.DOTALL)
+    skills_match = re.search(r'(?:\*\*Skills:\*\*|Skills:)\n*(.*?)(?:\n\n|$)', response, re.DOTALL)
     skills_text = skills_match.group(1).strip() if skills_match else "Unknown"
 
     # Split skills by line breaks or commas, and clean up whitespace
@@ -45,9 +49,8 @@ def parse_response(response):
         "email": email,
         "phone": phone,
         "skills": skills,
-    }
-
-
+    }   
+    
 def parse_resume_text(text):
     # In a real-world scenario, you would use NLP or regex here
     model = Predibase(

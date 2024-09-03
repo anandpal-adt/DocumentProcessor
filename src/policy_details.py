@@ -63,4 +63,3 @@ def extract_policy_details(question):
     answer = result["result"]
     
     return {"answer": answer}
-

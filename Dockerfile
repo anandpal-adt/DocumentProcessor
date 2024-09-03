@@ -26,6 +26,7 @@ COPY . .
 # Expose the port and define the command to run your app
 EXPOSE 8000
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+<<<<<<< HEAD
 
 
 
@@ -45,3 +46,5 @@ RUN pip install --no-cache-dir --no-deps -r requirements.txt \
 EXPOSE 8000    
 # Command to run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+=======
+>>>>>>> 753e3009d8b3f3c208f37f53db225420a13394c7
