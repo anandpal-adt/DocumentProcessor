@@ -1,8 +1,0 @@
-## To train and create the model##
-python -m spacy train config.cfg --output ./trained_model --paths.train ./training_data.spacy --paths.dev ./training_data.spacy
-
-##optimize efficiency##
-python -m spacy init config config.cfg --lang en --pipeline ner --optimize efficiency
-
-##download spacy model
-python -m spacy download en_core_web_sm

@@ -1,0 +1,11 @@
+credentials:
+  PINECONE_API_KEY: a8e5cfd2-ac36-45f1-85c8-46884ea7e342
+  # api_key: pb_y_JOJ2toWf-hewNLR3yY_Q
+  api_key: pb_ZhiKwJt9WF-3bNYzFaXjAQ
+  # model_name: llama-3-8b-instruct
+  model_name: llama-3-1-8b-instruct
+  persist_directory: ./vectorstore
+  db_url: mongodb://localhost:27017
+  db_name: local
+  collection_name: resume_details
+  vector_collection_name: policy_vector_data
